@@ -1,18 +1,20 @@
-Ini, TOML
-#!name=Locket Custom 60s
-#!desc=Tự tạo module Locket cá nhân - Quay video 60s
+#!name=Locket Custom 45s & AI
+#!desc=Mở khóa Gold, giới hạn 45s và tính năng AI của Locket
 
 [General]
 
 [MITM]
-hostname = %APPEND% api.revenuecat.com, firebaseremoteconfig.googleapis.com
+hostname = %APPEND% api.revenuecat.com, firebaseremoteconfig.googleapis.com, api.locket.camera, *.locket.camera
 
 [Script]
-# 1. Tự trỏ đến file locket.js của bạn
+# 1. Trỏ đến file locket.js để ép thời gian quay (đã sửa thành 45s)
 locket_remote = type=http-response, pattern=^https?:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-.*, script-path=https://raw.githubusercontent.com/phuttv789/locket-custom/main/locket.js, requires-body=true, max-size=524288, timeout=60
 
 # 2. Xóa ETag Header chống dính Cache
 deleteHeader = type=http-request, pattern=^https:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers), script-path=https://raw.githubusercontent.com/usatalk/shin/main/deleteHeader.js, timeout=60
 
-# 3. Kích hoạt Gold & Ngày 25/05/1111
+# 3. Kích hoạt trạng thái Gold qua RevenueCat
 revenuecat = type=http-response, pattern=^https:\/\/api\.revenuecat\.com\/.+\/(receipts$|subscribers\/[^/]+$), script-path=https://raw.githubusercontent.com/usatalk/shin/main/locket_sub.js, requires-body=true, max-size=-1, timeout=60
+
+# 4. Giả lập phản hồi cho các tính năng AI của Locket
+locket_ai = type=http-response, pattern=^https:\/\/(api|ai)\.locket\.camera\/.+, script-path=https://raw.githubusercontent.com/phuttv789/locket-custom/main/locket_ai.js, requires-body=true, max-size=-1, timeout=60
