@@ -1,33 +1,31 @@
 /*
- * Locket Custom 60s - Bypass Video Duration Limit
- * Trực tiếp chỉnh sửa cấu hình Remote Config của Firebase trả về cho Locket app
+ * Locket Custom 60s - Fix Upload Payload & Remote Config
  */
-
 let body = $response.body;
 
 try {
     let obj = JSON.parse(body);
     
-    // Kiểm tra và ép thông số giới hạn thời gian quay video lên 60 giây (hoặc cao hơn)
+    // Nâng giới hạn thời lượng và cấu hình phân giải/dung lượng cho phép từ Remote Config
     if (obj && obj.parameters) {
-        // Tùy chỉnh các key cấu hình thời lượng video thường gặp trong Locket Remote Config
-        // Ví dụ: ép max duration hoặc giới hạn quay thành 60000ms (60 giây)
         for (let key in obj.parameters) {
-            if (key.toLowerCase().includes('duration') || key.toLowerCase().includes('video') || key.toLowerCase().includes('limit')) {
-                // Thay đổi giá trị thời lượng tối đa thành 60 giây nếu app kiểm tra qua remote config
+            let k = key.toLowerCase();
+            if (k.includes('duration') || k.includes('video') || k.includes('limit') || k.includes('size')) {
                 if (obj.parameters[key].defaultValue) {
-                    obj.parameters[key].defaultValue.value = "60";
+                    obj.parameters[key].defaultValue.value = "60"; // Ép thời gian tối đa
                 }
             }
         }
     }
     
-    // Một số cấu hình bổ sung để ép client gửi video dạng chunk hoặc bỏ qua kiểm tra dung lượng phía client
-    // Trả về dữ liệu đã được bùa chú
+    // Bổ sung tùy chỉnh cấu hình nếu app check qua các trường giá trị JSON khác
+    if (obj && obj.config) {
+        obj.config.max_video_duration = 60;
+    }
+
     body = JSON.stringify(obj);
 } catch (e) {
-    // Nếu lỗi cú pháp JSON thì giữ nguyên body gốc để tránh crash app
-    console.log("Locket 60s Script Error: " + e);
+    console.log("Locket 60s Error: " + e);
 }
 
 $done({ body });
