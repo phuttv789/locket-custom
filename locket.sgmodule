@@ -1,5 +1,5 @@
 #!name=Locket Custom 45s & AI
-#!desc=Mở khóa Gold, giới hạn 45s và tính năng AI của Locket
+#!desc=Mở khóa Gold, giới hạn 45s và tính năng AI miễn phí của Locket
 
 [General]
 
@@ -7,7 +7,7 @@
 hostname = %APPEND% api.revenuecat.com, firebaseremoteconfig.googleapis.com, api.locket.camera, *.locket.camera
 
 [Script]
-# 1. Trỏ đến file locket.js để ép thời gian quay (đã sửa thành 45s)
+# 1. Trỏ đến file locket.js để ép thời gian quay 45s
 locket_remote = type=http-response, pattern=^https?:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-.*, script-path=https://raw.githubusercontent.com/phuttv789/locket-custom/main/locket.js, requires-body=true, max-size=524288, timeout=60
 
 # 2. Xóa ETag Header chống dính Cache
