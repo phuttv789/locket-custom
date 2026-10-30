@@ -6,7 +6,7 @@ let body = $response.body;
 try {
     let obj = JSON.parse(body);
     
-    // Ép thời lượng tối đa thành 45 giây (45)
+    // Ép thời lượng tối đa thành 45 giây
     if (obj && obj.parameters) {
         for (let key in obj.parameters) {
             let k = key.toLowerCase();
